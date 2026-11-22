@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bank Bonus">
+<link rel="apple-touch-icon" href="./apple-touch-icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="manifest" href="./manifest.webmanifest">
+
+<title>BankBonus 1.7</title>
+<style>
+:root{--bg:#10131b;--panel:#1b2230;--panel2:#242d3c;--text:#f4f6fa;--muted:#9ba7b8;--green:#65d6a0;--yellow:#f2bd62;--red:#ff7777;--line:#30394a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:0 16px 30px;max-width:1000px;margin-inline:auto}
+header{display:flex;justify-content:space-between;align-items:center;padding:24px 0}
+h1{font-size:26px;margin:0}h2{font-size:18px;margin:0 0 14px}h3{font-size:16px;margin:0}
+p{color:var(--muted);font-size:13px;line-height:1.5}
+button,input,textarea,select{font:inherit}
+button{border:0;border-radius:11px;padding:11px 15px;background:var(--green);color:#102019;font-weight:700;cursor:pointer}
+button.secondary{background:var(--panel2);color:var(--text)}button.danger{background:#482b34;color:#ffb2b2}
+button.small{padding:8px 10px;font-size:12px}button:disabled{opacity:.45;cursor:not-allowed}
+input,textarea,select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;margin:6px 0 13px}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--green);margin:0}
+label{font-size:13px;color:var(--muted)}
+.panel,.bank,.group{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:var(--panel);padding:14px;border-radius:13px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:21px;margin-top:7px}
+.green{color:var(--green)}.yellow{color:var(--yellow)}.muted{color:var(--muted)}
+nav{display:flex;gap:7px;margin:20px 0;overflow:auto}nav button{white-space:nowrap}nav button:not(.active){background:var(--panel2);color:var(--muted)}
+.hidden{display:none!important}.bank>summary{padding:2px 0 8px}.bank>summary:after{font-size:18px}.bank-content{padding-top:4px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row.wrap{flex-wrap:wrap}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkline{display:flex;gap:9px;align-items:flex-start;margin:10px 0 4px;color:var(--text)}
+.checkline span{font-size:13px}
+.group{background:#202938;margin:12px 0}
+.group-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border:0}.task-inline{align-items:center}.task-name{min-width:0}.task-right{margin-left:auto;display:flex;align-items:center;justify-content:flex-end}.task-right .task-meter{margin:0}details>summary{list-style:none;cursor:pointer}details>summary::-webkit-details-marker{display:none}details>summary:after{content:"▾";color:var(--muted);margin-left:8px}details:not([open])>summary:after{content:"▸"}.task span{font-size:13px;flex:1}.task.done span{text-decoration:line-through;color:var(--muted)}
+.progress{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin:10px 0}.progress div{height:100%;background:var(--green)}
+.tag{font-size:11px;background:var(--panel2);padding:5px 8px;border-radius:20px;color:var(--muted)}
+.reward{font-size:20px;font-weight:800;color:var(--green)}
+.monthbox{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.monthbox.current-month{background:#1d3440;border:1px solid #438a78;border-radius:12px;padding:12px;margin-top:12px;box-shadow:0 0 0 1px #438a7833}.monthbox.future-month{opacity:.38;filter:grayscale(.65)}.monthbox.past-month{opacity:.72}.month-focus{color:#8ce8bd;font-weight:800}.task-meter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px;padding:8px;background:#141b25;border-radius:9px}.task-meter button{padding:5px 10px;min-width:34px}.task-meter input{max-width:115px;padding:7px}.task-meter strong{font-variant-numeric:tabular-nums}.task-setting{display:grid;grid-template-columns:minmax(0,1fr) 120px 100px;gap:8px;align-items:end;margin:8px 0;padding:10px;background:#141b25;border-radius:9px}.task-setting label{font-size:12px}.task-setting input,.task-setting select{padding:7px}@media(max-width:650px){.task-setting{grid-template-columns:1fr 1fr}.task-setting>div:first-child{grid-column:1/-1}}
+.notice{background:#302b20;border:1px solid #65502d;padding:10px;border-radius:10px;color:#f4d59c;font-size:12px;margin:10px 0}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
+@media(max-width:650px){.stats{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.row.mobile-col{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header><div><h1>Bank<span class="green">Bonus</span></h1><p>Twój osobisty manager promocji · wersja 1.7</p></div><span style="font-size:26px">💰</span></header>
+
+<nav>
+ <button class="active" data-tab="summary" onclick="tab('summary',this)">Podsumowanie</button>
+ <button data-tab="banks" onclick="tab('banks',this)">Moje promocje</button>
+ <button data-tab="add" onclick="tab('add',this)">+ Dodaj promocję</button>
+ <button data-tab="history" onclick="tab('history',this)">Historia premii</button>
+</nav>
+
+<main id="summary">
+ <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <div class="stat"><small>Otrzymane premie</small><strong class="green" id="earned">0 zł</strong></div>
+  <div class="stat"><small>Do odebrania</small><strong class="yellow" id="pending">0 zł</strong></div>
+ </div>
+ <h2 style="margin-top:20px">Status promocji</h2>
+ <div id="summaryList"></div>
+ <p id="summaryEmpty" class="hidden">Nie masz jeszcze żadnych promocji. Dodaj pierwszą!</p>
+</main>
+
+<main id="banks" class="hidden">
+ <div class="row"><h2>Twoje promocje</h2><span class="muted" id="monthLabel"></span></div>
+ <div id="bankList"></div>
+ <p id="empty">Nie masz jeszcze żadnych promocji. Dodaj pierwszą!</p>
+ <div class="panel">
+ <h2>Kopia zapasowa</h2><p>Eksportuj dane, aby zachować je na wypadek zmiany urządzenia lub utraty danych przeglądarki.</p>
+ <div class="actions"><button class="secondary" onclick="backup()">Eksportuj dane</button><button class="secondary" onclick="document.getElementById('restore').click()">Importuj dane</button><input id="restore" type="file" accept=".json" class="hidden" onchange="restore(event)"></div>
+</div>
+</main>
+
+<main id="add" class="hidden">
+ <form id="promoForm" class="panel">
+  <h2 id="formTitle">Dodaj promocję</h2>
+  <label>Nazwa banku</label><input id="bankName" placeholder="Np. Santander" required>
+  <label>Nazwa promocji</label><input id="promoName" placeholder="Np. Premia za otwarcie konta">
+  <div class="formgrid">
+   <div><label>Miesiąc założenia / punkt odniesienia</label><input id="startMonth" type="month" required></div>
+   <div><label>Przez ile miesięcy trwa promocja?</label><input id="duration" type="number" min="1" max="120" value="3" required></div>
+  </div>
+  <div class="notice">Miesiąc 1 oznacza miesiąc wskazany jako początek promocji. Warunki i nagrody będą rozliczane względem tego miesiąca.</div>
+
+  <section class="panel" style="background:#202938">
+   <h3>Warunki darmowego konta</h3>
+   <label class="checkline"><input type="checkbox" id="hasAccount"><span>Ta promocja wymaga spełnienia warunków darmowego konta</span></label>
+   <div id="accountWrap" class="hidden"><p>Te warunki obowiązują przez cały okres promocji. Nie ustawiasz tu osobnej częstotliwości.</p>
+    <label>Warunki darmowego konta – jeden warunek w każdej linii</label><textarea id="accountConditions" rows="3" placeholder="Np. zapewnić wpływ 1000 zł"></textarea><div id="accountSettings"></div>
+   </div>
+  </section>
+  <section class="panel" style="background:#202938">
+   <h3>Warunki darmowej karty</h3>
+   <label class="checkline"><input type="checkbox" id="hasCard"><span>Ta promocja wymaga spełnienia warunków darmowej karty</span></label>
+   <div id="cardWrap" class="hidden"><p>Te warunki obowiązują przez cały okres promocji. Nie ustawiasz tu osobnej częstotliwości.</p>
+    <label>Warunki darmowej karty – jeden warunek w każdej linii</label><textarea id="cardConditions" rows="3" placeholder="Np. wykonać 5 płatności kartą"></textarea><div id="cardSettings"></div>
+   </div>
+  </section>
+
+  <div class="row wrap"><h3>Listy warunków premiowych</h3><button type="button" class="secondary small" onclick="addGroupEditor()">+ Dodaj listę warunków</button></div>
+  <p>Każda lista może mieć własny harmonogram, kwotę premii i sposób jej wypłaty.</p>
+  <div id="groupsEditor"></div>
+  <div class="actions"><button type="submit">Zapisz promocję</button><button type="button" class="secondary" onclick="cancelEdit()">Anuluj</button></div>
+ </form>
+</main>
+
+<main id="history" class="hidden">
+ <div class="panel"><h2>Historia otrzymanych premii</h2><div id="historyList"></div><hr style="border-color:var(--line)"><div class="row"><strong>Łącznie otrzymano</strong><strong class="green" id="historyTotal">0 zł</strong></div></div>
+</main>
+
+<footer>Bank Bonus 1.7 · Dane są przechowywane lokalnie na tym urządzeniu</footer>
+
+<script>
+const KEY="bankbonus_v1_1";
+let promos=JSON.parse(localStorage.getItem(KEY)||"[]");
+let history=JSON.parse(localStorage.getItem(KEY+"_history")||"[]");
+let editingId=null, editorGroups=[], fixedSettings={account:[],card:[]};
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("pl-PL",{style:"currency",currency:"PLN"}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const currentMonth=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`};
+const addMonths=(ym,n)=>{let [y,m]=ym.split("-").map(Number);let d=new Date(y,m-1+n,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`};
+const monthDiff=(a,b)=>{let [ay,am]=a.split("-").map(Number),[by,bm]=b.split("-").map(Number);return (by-ay)*12+bm-am};
+const monthName=ym=>{if(!ym)return "";let [y,m]=ym.split("-").map(Number);return new Date(y,m-1,1).toLocaleDateString("pl-PL",{month:"long",year:"numeric"})};
+const monthOffset=(p,ym)=>monthDiff(p.startMonth,ym)+1;
+const id=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();
+$("startMonth").value=currentMonth();
+$("monthLabel").textContent=monthName(currentMonth());
+$("hasAccount").addEventListener("change",()=> $("accountWrap").classList.toggle("hidden",!$("hasAccount").checked));
+$("hasCard").addEventListener("change",()=> $("cardWrap").classList.toggle("hidden",!$("hasCard").checked));
+
+function tab(name,btn){document.querySelectorAll("main").forEach(x=>x.classList.add("hidden"));$(name).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));if(!btn||btn.dataset.tab!==name)btn=document.querySelector(`nav button[data-tab="${name}"]`);if(btn)btn.classList.add("active");if(name==="history")renderHistory()}
+function addGroupEditor(data={}) {
+ const g={id:data.id||id(),title:data.title||`Lista warunków ${editorGroups.length+1}`,frequency:data.frequency||"once",month:Number(data.month||1),amount:Number(data.amount??300),payout:data.payout||"once",tasks:data.tasks||[],taskSettings:data.taskSettings||[]};
+ editorGroups.push(g);renderGroupEditors();
+}
+function ensureTaskSettings(g){
+ g.taskSettings=g.taskSettings||[];
+ g.tasks.forEach((task,i)=>{if(!g.taskSettings[i])g.taskSettings[i]={mode:"check",target:1};});
+ g.taskSettings.length=g.tasks.length;
+}
+function renderTaskSettings(g){
+ ensureTaskSettings(g);
+ let host=$(`taskSettings-${g.id}`);if(!host)return;
+ host.innerHTML=g.tasks.map((task,i)=>{
+  let s=g.taskSettings[i];
+  return `<div class="task-setting">
+   <div><label>Warunek ${i+1}</label><div>${esc(task)}</div></div>
+   <div><label>Typ rozliczania</label><select data-g="${g.id}" data-i="${i}" data-setting="mode">
+    <option value="check" ${s.mode==="check"?"selected":""}>Zaznaczany</option>
+    <option value="count" ${s.mode==="count"?"selected":""}>Licznik sztuk</option>
+    <option value="amount" ${s.mode==="amount"?"selected":""}>Suma kwot (zł)</option>
+   </select></div>
+   <div><label>Cel ${s.mode==="amount"?"(zł)":"(szt.)"}</label><input type="number" min="${s.mode==="amount"?"0.01":"1"}" step="${s.mode==="amount"?"0.01":"1"}" data-g="${g.id}" data-i="${i}" data-setting="target" value="${Number(s.target)||1}"></div>
+  </div>`;
+ }).join("");
+}
+function renderGroupEditors(){
+ $("groupsEditor").innerHTML=editorGroups.map((g,i)=>`
+ <div class="group">
+  <div class="group-head"><strong>Lista ${i+1}</strong><button type="button" class="danger small" onclick="removeGroupEditor('${g.id}')">Usuń listę</button></div>
+  <label>Nazwa listy (np. premia za aktywność)</label><input data-g="${g.id}" data-f="title" value="${esc(g.title)}">
+  <div class="formgrid">
+   <div><label>Rodzaj obowiązywania</label><select data-g="${g.id}" data-f="frequency" onchange="updateGroupField('${g.id}','frequency',this.value);renderGroupEditors()">
+    <option value="once" ${g.frequency==="once"?"selected":""}>Jednorazowe – w wybranym miesiącu</option>
+    <option value="monthly" ${g.frequency==="monthly"?"selected":""}>Co miesiąc – od wybranego miesiąca</option>
+   </select></div>
+   <div><label>${g.frequency==="once"?"Miesiąc wykonania warunków":"Pierwszy miesiąc obowiązywania"}</label><input type="number" min="1" max="120" data-g="${g.id}" data-f="month" value="${g.month}"></div>
+  </div>
+  <div class="formgrid">
+   <div><label>Kwota premii za tę listę (zł)</label><input type="number" min="0" step=".01" data-g="${g.id}" data-f="amount" value="${g.amount}"></div>
+   <div><label>Sposób wypłaty</label><select data-g="${g.id}" data-f="payout"><option value="once" ${g.payout==="once"?"selected":""}>Jednorazowo – po spełnieniu warunków</option><option value="monthly" ${g.payout==="monthly"?"selected":""}>Po każdym miesiącu spełnienia warunków</option></select></div>
+  </div>
+  <label>Warunki – jeden warunek w każdej linii</label><textarea rows="4" data-g="${g.id}" data-f="tasks" placeholder="Wykonać 5 płatności kartą&#10;Wydać 1000 zł">${esc(g.tasks.join("\n"))}</textarea>
+  <div id="taskSettings-${g.id}"></div>
+  <p>Dla każdego warunku wybierz zwykłe zaznaczenie, licznik sztuk lub sumowanie kwot. Cel określa, kiedy warunek zostanie automatycznie zaliczony.</p>
+  <p>Wypłata jednorazowa przy liście miesięcznej jest rozliczana po pierwszym miesiącu, w którym wszystkie warunki tej listy zostaną wykonane.</p>
+ </div>`).join("");
+ editorGroups.forEach(renderTaskSettings);
+}
+function updateGroupField(gid,field,value){let g=editorGroups.find(x=>x.id===gid);if(g)g[field]=value}
+function removeGroupEditor(gid){editorGroups=editorGroups.filter(x=>x.id!==gid);renderGroupEditors()}
+$("groupsEditor").addEventListener("input",e=>{
+ let el=e.target,gid=el.dataset.g,f=el.dataset.f;
+ if(gid&&f){let g=editorGroups.find(x=>x.id===gid);if(!g)return;
+  if(f==="tasks"){let old=g.tasks.slice();g.tasks=el.value.split("\n").map(x=>x.trim()).filter(Boolean);g.taskSettings=g.tasks.map((_,i)=>g.taskSettings?.[i]||{mode:"check",target:1});renderTaskSettings(g);}
+  else if(f==="month"||f==="amount")g[f]=Number(el.value);else g[f]=el.value;
+  return;
+ }
+ if(gid&&el.dataset.setting){let g=editorGroups.find(x=>x.id===gid),i=Number(el.dataset.i);if(!g)return;g.taskSettings=g.taskSettings||[];g.taskSettings[i]=g.taskSettings[i]||{mode:"check",target:1};g.taskSettings[i][el.dataset.setting]=el.dataset.setting==="target"?Number(el.value):el.value;if(el.dataset.setting==="mode")renderTaskSettings(g);}
+});
+$("groupsEditor").addEventListener("change",e=>{
+ let el=e.target,gid=el.dataset.g,f=el.dataset.f;
+ if(gid&&f!=="tasks"){let g=editorGroups.find(x=>x.id===gid);if(g)g[f]=(f==="month"||f==="amount")?Number(el.value):el.value;}
+ if(gid&&el.dataset.setting){let g=editorGroups.find(x=>x.id===gid),i=Number(el.dataset.i);if(g){g.taskSettings[i][el.dataset.setting]=el.dataset.setting==="target"?Number(el.value):el.value;if(el.dataset.setting==="mode")renderTaskSettings(g);}}
+});
+
+function renderFixedSettings(kind){
+ let area=$(kind==="account"?"accountConditions":"cardConditions"),lines=area.value.split("\n").map(x=>x.trim()).filter(Boolean),prev=fixedSettings[kind]||[];
+ fixedSettings[kind]=lines.map((_,i)=>prev[i]||{mode:"check",target:1});
+ $(kind+"Settings").innerHTML=lines.map((line,i)=>{let q=fixedSettings[kind][i];return `<div class="task-setting"><div><label>Warunek ${i+1}</label><div>${esc(line)}</div></div><div><label>Typ rozliczania</label><select data-fixed="${kind}" data-i="${i}" data-prop="mode"><option value="check" ${q.mode==="check"?"selected":""}>Zaznaczany</option><option value="count" ${q.mode==="count"?"selected":""}>Licznik sztuk</option><option value="amount" ${q.mode==="amount"?"selected":""}>Suma kwot (zł)</option></select></div><div><label>Cel</label><input type="number" min="${q.mode==="count"?"1":"0.01"}" step="${q.mode==="count"?"1":"0.01"}" value="${q.target||1}" data-fixed="${kind}" data-i="${i}" data-prop="target"></div></div>`}).join("");
+}
+["account","card"].forEach(kind=>$(kind==="account"?"accountConditions":"cardConditions").addEventListener("input",()=>renderFixedSettings(kind)));
+document.addEventListener("change",e=>{let el=e.target;if(!el.dataset.fixed)return;let kind=el.dataset.fixed,i=Number(el.dataset.i),prop=el.dataset.prop;fixedSettings[kind][i][prop]=prop==="target"?Number(el.value):el.value;if(prop==="mode")renderFixedSettings(kind)});
+function resetForm(){editingId=null;fixedSettings={account:[],card:[]};$("promoForm").reset();$("formTitle").textContent="Dodaj promocję";$("startMonth").value=currentMonth();$("duration").value=3;$("accountWrap").classList.add("hidden");$("cardWrap").classList.add("hidden");editorGroups=[];addGroupEditor();$("promoForm").querySelector('button[type="submit"]').textContent="Zapisz promocję"}
+function cancelEdit(){resetForm();tab("banks",document.querySelector("nav button"))}
+function editPromo(pid){
+ let p=promos.find(x=>x.id===pid);if(!p)return;editingId=pid;
+ $("bankName").value=p.bankName;$("promoName").value=p.promoName;$("startMonth").value=p.startMonth;$("duration").value=p.duration;
+ $("hasAccount").checked=!!p.account.enabled;$("accountWrap").classList.toggle("hidden",!p.account.enabled);$("accountConditions").value=(p.account.tasks||[]).map(t=>t.text).join("\n");fixedSettings.account=(p.account.tasks||[]).map(t=>({mode:t.mode||"check",target:t.target||1}));renderFixedSettings("account");
+ $("hasCard").checked=!!p.card.enabled;$("cardWrap").classList.toggle("hidden",!p.card.enabled);$("cardConditions").value=(p.card.tasks||[]).map(t=>t.text).join("\n");fixedSettings.card=(p.card.tasks||[]).map(t=>({mode:t.mode||"check",target:t.target||1}));renderFixedSettings("card");
+ editorGroups=p.groups.map(g=>({...g,tasks:g.tasks.map(t=>t.text),taskSettings:g.tasks.map(t=>({mode:t.mode||"check",target:t.target||1}))}));renderGroupEditors();$("formTitle").textContent="Edytuj promocję";$("promoForm").querySelector('button[type="submit"]').textContent="Zapisz zmiany";
+ tab("add",document.querySelectorAll("nav button")[1]);
+}
+$("promoForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const old=editingId?promos.find(x=>x.id===editingId):null;
+ const makeFixed=(kind,enabled,text,previous)=>({enabled,tasks:enabled?text.split("\n").map(x=>x.trim()).filter(Boolean).map((text,i)=>{let prev=previous?.tasks?.[i]||{},set=fixedSettings[kind]?.[i]||{};return {id:prev.id||id(),text,mode:set.mode||prev.mode||"check",target:Math.max(set.mode==="count"?1:.01,Number(set.target??prev.target)||1),doneMonths:prev.doneMonths||[],progressByMonth:prev.progressByMonth||{}}}):[]});
+ const groups=editorGroups.map(g=>({id:g.id,title:g.title||"Lista warunków",frequency:g.frequency,month:Math.max(1,Number(g.month)||1),amount:Math.max(0,Number(g.amount)||0),payout:g.payout,tasks:(g.tasks||[]).map((text,i)=>{let prev=old?.groups.find(x=>x.id===g.id)?.tasks?.[i],s=g.taskSettings?.[i]||{mode:"check",target:1};return {id:prev?.id||id(),text,mode:s.mode||"check",target:Math.max(.01,Number(s.target)||1),progressByMonth:prev?.progressByMonth||{},doneMonths:prev?.doneMonths||[]}}),paidMonths:old?.groups.find(x=>x.id===g.id)?.paidMonths||[],paidOnce:old?.groups.find(x=>x.id===g.id)?.paidOnce||false}));
+ const p={id:editingId||id(),bankName:$("bankName").value.trim(),promoName:$("promoName").value.trim(),startMonth:$("startMonth").value,duration:Math.max(1,Number($("duration").value)||1),
+ account:makeFixed("account",$("hasAccount").checked,$("accountConditions").value,old?.account),
+ card:makeFixed("card",$("hasCard").checked,$("cardConditions").value,old?.card),groups,
+ fixedDone:old?.fixedDone||{},received:old?.received||false};
+ if(old)promos=promos.map(x=>x.id===editingId?p:x);else promos.push(p);
+ save();resetForm();tab("banks",document.querySelector("nav button"));
+});
+function isGroupActive(p,g,offset){return offset>=g.month&&(g.frequency==="monthly"||offset===g.month)&&offset<=p.duration}
+function taskDone(task,ym){
+ if(task.mode==="count"||task.mode==="amount")return taskProgress(task,ym)>=Number(task.target||1);
+ return (task.doneMonths||[]).includes(ym);
+}
+function taskProgress(task,ym){return Number(task.progressByMonth?.[ym]||0)}
+function groupComplete(g,ym){return g.tasks.length>0&&g.tasks.every(t=>taskDone(t,ym))}
+function eligibleMonths(p,g){let a=[];for(let n=1;n<=p.duration;n++)if(isGroupActive(p,g,n))a.push(addMonths(p.startMonth,n-1));return a}
+function payoutDue(p,g,ym){
+ if(!groupComplete(g,ym))return false;
+ if(g.payout==="monthly")return true;
+ let months=eligibleMonths(p,g);let first=months.find(m=>groupComplete(g,m));return first===ym;
+}
+function groupPaid(g,ym){return g.payout==="monthly"?(g.paidMonths||[]).includes(ym):!!g.paidOnce}
+function taskLockedAfterPayment(g,t,ym){return !!g&&!!t&&groupPaid(g,ym)&&taskDone(t,ym)}
+function promoMonthRewardStatus(p,ym){
+ let due=p.groups.filter(g=>eligibleMonths(p,g).includes(ym)&&payoutDue(p,g,ym));
+ if(!due.length)return p.groups.some(g=>eligibleMonths(p,g).includes(ym)&&groupComplete(g,ym))?"Warunki spełnione — premia niepotwierdzona":"Warunki w trakcie";
+ let paid=due.filter(g=>groupPaid(g,ym)).length;
+ if(paid===due.length)return "Premia otrzymana";
+ if(paid>0)return "Część premii otrzymana";
+ return "Warunki spełnione — premia niepotwierdzona";
+}
+function syncTaskDone(t,ym){
+ t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);
+ if(t.mode==="check"){if(t._checkedMonths?.includes(ym))t.doneMonths.push(ym);}
+ else if(taskProgress(t,ym)>=Number(t.target||1))t.doneMonths.push(ym);
+}
+function markTask(pid,gid,tid,ym,checked){
+ let p=promos.find(x=>x.id===pid),g=p?.groups.find(x=>x.id===gid),t=g?.tasks.find(x=>x.id===tid);if(!t||taskLockedAfterPayment(g,t,ym))return;
+ t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);
+ if(checked)t.doneMonths.push(ym);save();
+}
+function changeTaskProgress(pid,gid,tid,ym,delta){
+ let p=promos.find(x=>x.id===pid),g=p?.groups.find(x=>x.id===gid),t=g?.tasks.find(x=>x.id===tid);if(!t||taskLockedAfterPayment(g,t,ym))return;
+ t.progressByMonth=t.progressByMonth||{};t.progressByMonth[ym]=Math.min(Math.max(0,Math.floor(Number(t.target)||1)),Math.max(0,Math.floor(taskProgress(t,ym))+Math.trunc(delta)));
+ t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);
+ if(t.progressByMonth[ym]>=Number(t.target||1))t.doneMonths.push(ym);save();
+}
+function setTaskProgress(pid,gid,tid,ym,value){
+ let p=promos.find(x=>x.id===pid),g=p?.groups.find(x=>x.id===gid),t=g?.tasks.find(x=>x.id===tid);if(!t||taskLockedAfterPayment(g,t,ym))return;
+ t.progressByMonth=t.progressByMonth||{};t.progressByMonth[ym]=Math.max(0,Number(value)||0);
+ t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);
+ if(t.progressByMonth[ym]>=Number(t.target||1))t.doneMonths.push(ym);save();
+}
+function adjustTaskAmount(pid,gid,tid,ym,button,sign){let p=promos.find(x=>x.id===pid),g=p?.groups.find(x=>x.id===gid),t=g?.tasks.find(x=>x.id===tid);if(!t||taskLockedAfterPayment(g,t,ym))return;
+ let input=button.parentElement.querySelector("input"),amount=Number(input.value);
+ if(!Number.isFinite(amount)||amount<=0){alert("Wpisz kwotę większą od zera.");return;}
+ changeTaskProgress(pid,gid,tid,ym,sign*amount);input.value="";
+}
+function markFixed(pid,kind,index,ym,checked){let p=promos.find(x=>x.id===pid),t=p?.[kind]?.tasks[index];if(!t)return;t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);if(checked)t.doneMonths.push(ym);save()}
+function syncFixedDone(t,ym){t.doneMonths=t.doneMonths||[];t.doneMonths=t.doneMonths.filter(x=>x!==ym);if(Number(t.progressByMonth?.[ym]||0)>=Number(t.target||1))t.doneMonths.push(ym)}
+function changeFixedProgress(pid,kind,i,ym,delta){let t=promos.find(x=>x.id===pid)?.[kind]?.tasks[i];if(!t)return;t.progressByMonth=t.progressByMonth||{};t.progressByMonth[ym]=Math.min(Math.max(0,Math.floor(Number(t.target)||1)),Math.max(0,Math.floor(Number(t.progressByMonth[ym]||0))+Math.trunc(delta)));syncFixedDone(t,ym);save()}
+function adjustFixedAmount(pid,kind,i,ym,button,sign){let input=button.parentElement.querySelector("input"),v=Number(input.value);if(!Number.isFinite(v)||v<=0){alert("Wpisz kwotę większą od zera.");return;}let t=promos.find(x=>x.id===pid)?.[kind]?.tasks[i];if(!t)return;t.progressByMonth=t.progressByMonth||{};t.progressByMonth[ym]=Math.max(0,Number(t.progressByMonth[ym]||0)+sign*v);syncFixedDone(t,ym);save()}
+function confirmPayment(pid,gid,ym){
+ let p=promos.find(x=>x.id===pid),g=p?.groups.find(x=>x.id===gid);if(!p||!g||!payoutDue(p,g,ym)||groupPaid(g,ym))return;
+ if(!confirm(`Potwierdzasz, że premia ${money(g.amount)} za ${monthName(ym)} faktycznie wpłynęła na Twoje konto?`))return;
+ if(g.payout==="monthly"){g.paidMonths.push(ym)}else{g.paidOnce=true}
+ history.push({id:id(),promoId:p.id,groupId:g.id,bank:p.bankName,promo:p.promoName,group:g.title,amount:g.amount,date:new Date().toISOString().slice(0,10),month:ym});
+ save();
+}
+function deletePromo(pid){if(!confirm("Usunąć tę promocję i jej dane?"))return;promos=promos.filter(p=>p.id!==pid);save()}
+function fixedTaskDone(t,ym){
+ if(t.mode==="count"||t.mode==="amount")return Number(t.progressByMonth?.[ym]||0)>=Number(t.target||1);
+ return (t.doneMonths||[]).includes(ym);
+}
+function fixedComplete(section,ym){return !!section?.tasks?.length&&section.tasks.every(t=>fixedTaskDone(t,ym));}
+function renderFixed(p,kind,title){
+ let section=p[kind];if(!section?.enabled)return "";
+ let now=currentMonth(),out=`<div class="monthbox"><strong>${title}</strong><p>Każdy warunek rozliczany osobno w każdym miesiącu promocji.</p>`;
+ for(let n=1;n<=p.duration;n++){
+  let ym=addMonths(p.startMonth,n-1),future=ym>now,complete=fixedComplete(section,ym);
+  out+=`<details class="monthbox ${ym===now?"current-month":future?"future-month":"past-month"}" ${future||complete?"":"open"}><summary class="row"><strong class="${ym===now?"month-focus":""}">${monthName(ym)} ${ym===now?"· AKTUALNY MIESIĄC":""}</strong><strong class="${complete?"month-focus":"muted"}">${complete?"Warunki spełnione":"Warunki w trakcie"}</strong></summary>`;
+  section.tasks.forEach((t,i)=>{let checked=(t.doneMonths||[]).includes(ym),val=Number(t.progressByMonth?.[ym]||0),target=Number(t.target)||1;let control=t.mode==="count"?`<div class="task-meter"><button class="secondary small" ${future||val<=0?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',-1)">−</button><strong>${val}/${target} szt.</strong><button class="small" ${future||val>=target?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',1)">+</button></div>`:t.mode==="amount"?`<div class="task-meter"><strong>${money(val)} / ${money(target)}</strong><input type="number" min="0.01" step="0.01" placeholder="Kwota" ${future?"disabled":""}><button class="small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,1)">Dodaj</button><button class="secondary small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,-1)">Cofnij</button></div>`:`<input type="checkbox" ${checked?"checked":""} ${future?"disabled":""} onchange="markFixed('${p.id}','${kind}',${i},'${ym}',this.checked)">`;out+=`<div class="task task-inline ${checked?"done":""}"><span class="task-name">${esc(t.text)}</span><div class="task-right">${control}</div></div>`});
+  if(future)out+=`<p>Ten miesiąc jeszcze się nie rozpoczął — warunki są zablokowane.</p>`;
+  out+=`</details>`;
+ }
+ return out+`</div>`;
+}
+function taskControl(p,g,t,ym,locked){
+ let disabled=locked?"disabled":"";
+ if(t.mode==="count"){
+  let val=taskProgress(t,ym),target=Number(t.target)||1;
+  return `<div class="task-meter"><button class="secondary small" ${disabled||val<=0?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',-1)">−</button><strong>${val} / ${target} szt.</strong><button class="small" ${disabled||val>=target?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',1)">+</button></div>`;
+ }
+ if(t.mode==="amount"){
+  let val=taskProgress(t,ym),target=Number(t.target)||1;
+  return `<div class="task-meter"><span>Suma:</span><strong>${money(val)} / ${money(target)}</strong><input type="number" min="0.01" step="0.01" placeholder="Kwota (zł)" ${disabled} aria-label="Kwota transakcji w zł"><button class="small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,1)">Dodaj</button><button class="secondary small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,-1)">Cofnij</button></div>`;
+ }
+ return `<input type="checkbox" ${taskDone(t,ym)?"checked":""} ${disabled} onchange="markTask('${p.id}','${g.id}','${t.id}','${ym}',this.checked)">`;
+}
+function renderMonthProgress(p,now,activeNow,doneTasks,allTasks,pct){
+ let status=activeNow?promoMonthRewardStatus(p,now):"Promocja nieaktywna w tym miesiącu";
+ return `<div class="monthbox current-month"><div class="row wrap"><strong class="month-focus">Postęp za ${monthName(now)}</strong><span class="tag">${activeNow?`${doneTasks}/${allTasks} wykonanych`:"Promocja nieaktywna"}</span></div><p style="margin:6px 0 2px">${activeNow?`${doneTasks}/${allTasks} warunków · ${pct}% · ${status}`:status}</p><div class="progress"><div style="width:${pct}%"></div></div><strong>${pct}%</strong></div>`;
+}
+function renderPromo(p){
+ let now=currentMonth(),activeNow=monthDiff(p.startMonth,now)>=0&&monthDiff(p.startMonth,now)<p.duration;
+ let allTasks=0,doneTasks=0;
+ if(activeNow){
+  ["account","card"].forEach(k=>{let s=p[k];if(s?.enabled){allTasks+=s.tasks.length;doneTasks+=s.tasks.filter(t=>(t.doneMonths||[]).includes(now)).length}});
+  p.groups.forEach(g=>{if(eligibleMonths(p,g).includes(now)){allTasks+=g.tasks.length;doneTasks+=g.tasks.filter(t=>taskDone(t,now)).length}});
+ }
+ let pct=allTasks?Math.round(doneTasks/allTasks*100):0;
+ let out=`<details class="bank" open><summary class="bank-summary"><div class="row wrap"><div><h3>${esc(p.bankName)}</h3><p style="margin:4px 0 0">${esc(p.promoName)}</p></div><span class="tag">${monthName(p.startMonth)} · ${p.duration} mies.</span></div>${renderMonthProgress(p,now,activeNow,doneTasks,allTasks,pct)}</summary><div class="bank-content">
+ ${renderFixed(p,"account","Darmowe konto")}${renderFixed(p,"card","Darmowa karta")}`;
+ if(!p.groups.length)out+=`<p>Nie dodano list warunków premiowych.</p>`;
+ p.groups.forEach(g=>{
+  out+=`<div class="group"><div class="group-head"><strong>${esc(g.title)}</strong><span class="tag">${g.frequency==="once"?"Jednorazowo":"Co miesiąc od miesiąca "+g.month}</span></div>
+  <div class="row wrap"><span class="muted">Premia: <strong class="green">${money(g.amount)}</strong></span><span class="muted">${g.payout==="monthly"?"Wypłata co miesiąc":"Wypłata jednorazowa"}</span></div>`;
+  let months=eligibleMonths(p,g);
+  if(!months.length)out+=`<p>Ta lista nie przypada w okresie trwania promocji.</p>`;
+  months.forEach(ym=>{
+   let complete=groupComplete(g,ym),due=payoutDue(p,g,ym),paid=groupPaid(g,ym),future=ym>now,past=ym<now;
+   out+=`<details class="monthbox ${ym===now?"current-month":future?"future-month":"past-month"}" ${future||(complete&&paid)?"":"open"}><summary class="row wrap"><strong class="${ym===now?"month-focus":""}">${monthName(ym)} ${ym===now?"· AKTUALNY MIESIĄC":""}</strong><strong class="${complete?"month-focus":"muted"}">${complete&&paid?"PREMIA OTRZYMANA":complete?"Warunki spełnione":"Warunki w trakcie"}</strong></summary>`;
+   g.tasks.forEach(t=>{let taskLocked=future||taskLockedAfterPayment(g,t,ym);out+=`<div class="task-wrap"><div class="task task-inline ${taskDone(t,ym)?"done":""}"><span class="task-name">${esc(t.text)}</span><div class="task-right">${taskControl(p,g,t,ym,taskLocked)}</div></div></div>`});
+   if(!g.tasks.length)out+=`<p>Dodaj warunki do tej listy, aby można było rozliczać premię.</p>`;
+   if(future)out+=`<p>Przyszły miesiąc — podgląd warunków, edycja zablokowana do jego rozpoczęcia.</p>`;
+   if(due)out+=`<div class="row wrap" style="margin-top:10px"><span class="${paid?"green":"yellow"}">${paid?"Premia potwierdzona jako otrzymana": "Premia do potwierdzenia: "+money(g.amount)}</span>${!paid?`<button class="small" onclick="confirmPayment('${p.id}','${g.id}','${ym}')">Potwierdź wpływ premii</button>`:""}</div>`;
+   else if(complete&&g.payout==="once"&&g.paidOnce)out+=`<p class="green">Premia jednorazowa została już potwierdzona.</p>`;
+   out+=`</details>`;
+  });
+  out+=`</div>`;
+ });
+ out+=`<div class="actions"><button class="secondary small" onclick="editPromo('${p.id}')">Edytuj</button><button class="danger small" onclick="deletePromo('${p.id}')">Usuń promocję</button></div></div></details>`;
+ return out;
+}
+function renderSummaryPromo(p){
+ let now=currentMonth(),activeNow=monthDiff(p.startMonth,now)>=0&&monthDiff(p.startMonth,now)<p.duration;
+ let allTasks=0,doneTasks=0;
+ if(activeNow){
+  ["account","card"].forEach(k=>{let section=p[k];if(section?.enabled){allTasks+=section.tasks.length;doneTasks+=section.tasks.filter(t=>(t.doneMonths||[]).includes(now)).length}});
+  p.groups.forEach(g=>{if(eligibleMonths(p,g).includes(now)){allTasks+=g.tasks.length;doneTasks+=g.tasks.filter(t=>taskDone(t,now)).length}});
+ }
+ let pct=allTasks?Math.round(doneTasks/allTasks*100):0;
+ return `<div class="panel" style="margin-bottom:10px">
+  <div class="row wrap"><div><strong>${esc(p.bankName)}</strong><p style="margin:4px 0 0">${esc(p.promoName||"Promocja bankowa")}</p></div><span class="tag">${monthName(p.startMonth)} · ${p.duration} mies.</span></div>
+  ${renderMonthProgress(p,now,activeNow,doneTasks,allTasks,pct)}
+ </div>`;
+}
+function render(){
+ let earned=history.reduce((s,x)=>s+(Number(x.amount)||0),0),pending=0,remaining=0,now=currentMonth();
+ promos.forEach(p=>{
+  let activeNow=monthDiff(p.startMonth,now)>=0&&monthDiff(p.startMonth,now)<p.duration;
+  p.groups.forEach(g=>eligibleMonths(p,g).forEach(ym=>{
+   if(payoutDue(p,g,ym)&&!groupPaid(g,ym))pending+=g.amount;
+   if(activeNow&&ym===now)g.tasks.forEach(t=>{if(!taskDone(t,now))remaining++});
+  }));
+  if(activeNow)["account","card"].forEach(kind=>{let s=p[kind];if(s?.enabled)s.tasks.forEach(t=>{if(!(t.doneMonths||[]).includes(now))remaining++})});
+ });
+ $("earned").textContent=money(earned);$("pending").textContent=money(pending);
+ $("summaryList").innerHTML=promos.map(renderSummaryPromo).join("");$("summaryEmpty").classList.toggle("hidden",promos.length>0);
+ $("bankList").innerHTML=promos.map(renderPromo).join("");$("empty").classList.toggle("hidden",promos.length>0);renderHistory();
+}
+function deleteHistory(idToDelete){
+ const entry=history.find(x=>x.id===idToDelete);if(!entry)return;
+ if(!confirm("Usunąć tę pozycję z historii i cofnąć potwierdzenie otrzymania tej premii?"))return;
+ history=history.filter(x=>x.id!==idToDelete);
+ const p=promos.find(x=>entry.promoId?x.id===entry.promoId:x.bankName===entry.bank&&x.promoName===entry.promo);
+ const g=p?.groups.find(x=>entry.groupId?x.id===entry.groupId:x.title===entry.group);
+ if(g){
+  const sameReward=history.some(x=>(x.promoId?x.promoId===p.id:x.bank===p.bankName&&x.promo===p.promoName)&&(x.groupId?x.groupId===g.id:x.group===g.title)&&x.month===entry.month);
+  if(!sameReward){
+   if(g.payout==="monthly")g.paidMonths=(g.paidMonths||[]).filter(m=>m!==entry.month);
+   else g.paidOnce=false;
+  }
+ }
+ save();
+}
+function renderHistory(){let total=history.reduce((s,x)=>s+(Number(x.amount)||0),0);$("historyTotal").textContent=money(total);$("historyList").innerHTML=history.length?[...history].reverse().map(x=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><div><strong>${esc(x.bank)}</strong><p>${esc(x.group||x.promo||"Premia")} · okres: ${esc(x.month||"")} · potwierdzono: ${esc(x.date)}</p></div><div class="actions"><strong class="green">+${money(x.amount)}</strong><button class="danger small" onclick="deleteHistory('${x.id}')">Usuń</button></div></div>`).join(""):"<p>Nie potwierdzono jeszcze żadnych wpływów premii.</p>"}
+function save(){localStorage.setItem(KEY,JSON.stringify(promos));localStorage.setItem(KEY+"_history",JSON.stringify(history));render()}
+function backup(){let data=JSON.stringify({promos,history},null,2),url=URL.createObjectURL(new Blob([data],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="BankBonus-1.7-backup.json";a.click();URL.revokeObjectURL(url)}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.promos)||!Array.isArray(d.history))throw Error();if(!confirm("Import zastąpi aktualne dane wersji 1.1. Kontynuować?"))return;promos=d.promos;history=d.history;save();alert("Dane zaimportowano.")}catch{alert("Nieprawidłowy plik kopii zapasowej.")}};r.readAsText(f);e.target.value=""}
+resetForm();render();tab("summary",document.querySelector('nav button[data-tab="summary"]'));
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(err => {
+      console.warn("Nie udało się zarejestrować trybu offline:", err);
+    });
+  });
+}
+</script>
+</body>
+</html>
