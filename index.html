@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
 <link rel="manifest" href="./manifest.webmanifest">
 
-<title>Bank Bonus 1.8</title>
+<title>Bank Bonus 1.9</title>
 <style>
 :root{--bg:#10131b;--panel:#1b2230;--panel2:#242d3c;--text:#f4f6fa;--muted:#9ba7b8;--green:#65d6a0;--yellow:#f2bd62;--red:#ff7777;--line:#30394a}
 *{box-sizing:border-box}
@@ -42,7 +42,25 @@ nav{display:flex;gap:7px;margin:20px 0;overflow:auto}nav button{white-space:nowr
 .progress{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin:10px 0}.progress div{height:100%;background:var(--green)}
 .tag{font-size:11px;background:var(--panel2);padding:5px 8px;border-radius:20px;color:var(--muted)}
 .reward{font-size:20px;font-weight:800;color:var(--green)}
-.monthbox{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.monthbox.current-month{background:#1d3440;border:1px solid #438a78;border-radius:12px;padding:12px;margin-top:12px;box-shadow:0 0 0 1px #438a7833}.monthbox.future-month{opacity:.38;filter:grayscale(.65)}.monthbox.past-month{opacity:.72}.month-focus{color:#8ce8bd;font-weight:800}.task-meter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px;padding:8px;background:#141b25;border-radius:9px}.task-meter button{padding:5px 10px;min-width:34px}.task-meter input{max-width:115px;padding:7px}.task-meter strong{font-variant-numeric:tabular-nums}.task-setting{display:grid;grid-template-columns:minmax(0,1fr) 120px 100px;gap:8px;align-items:end;margin:8px 0;padding:10px;background:#141b25;border-radius:9px}.task-setting label{font-size:12px}.task-setting input,.task-setting select{padding:7px}@media(max-width:650px){.task-setting{grid-template-columns:1fr 1fr}.task-setting>div:first-child{grid-column:1/-1}}
+.monthbox{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.monthbox.current-month{background:#1d3440;border:1px solid #438a78;border-radius:12px;padding:12px;margin-top:12px;box-shadow:0 0 0 1px #438a7833}.monthbox.future-month{opacity:.38;filter:grayscale(.65)}.monthbox.past-month{opacity:.72}.month-focus{color:#8ce8bd;font-weight:800}.task-meter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px;padding:8px;background:#141b25;border-radius:9px}.task-meter button{padding:5px 10px;min-width:34px}.task-meter input{max-width:115px;padding:7px}.task-meter strong{font-variant-numeric:tabular-nums}.task-setting{display:grid;grid-template-columns:minmax(0,1fr) 120px 100px;gap:8px;align-items:end;margin:8px 0;padding:10px;background:#141b25;border-radius:9px}.task-setting label{font-size:12px}.task-setting input,.task-setting select{padding:7px}
+.task-card{display:flex;flex-direction:column;gap:9px;margin:10px 0;padding:12px;background:#202f43;border:1px solid #344b68;border-radius:12px}
+.task-card.is-done{background:#1d382f;border-color:#376b55}
+.task-card .task-name{display:block;font-size:15px;font-weight:750;line-height:1.45;color:var(--text);overflow-wrap:anywhere}
+.task-card.is-done .task-name{color:#b8e8ce}
+.task-highlight{color:#ffd27b;font-weight:850}
+.task-card.is-done .task-highlight{color:#a9e9c3}
+.task-card .task-controls{width:100%;min-width:0}
+.task-card .task-meter{width:100%;margin:0;padding:9px;background:#151f2d;justify-content:flex-start}
+.task-card .task-meter strong{font-size:14px}
+.task-progress{flex:1 0 100%;height:6px;background:#34445b;border-radius:8px;overflow:hidden}
+.task-progress>div{height:100%;background:#65d6a0;border-radius:8px}
+.task-card .task-meter input{flex:1 1 100px;width:auto;max-width:150px;min-width:0;margin:0}
+.task-card .task-meter button{background:#3979d5;color:#fff}
+.task-card .task-meter button.secondary{background:#34445b;color:#f4f6fa}
+.task-card .task-check{display:flex;align-items:center;gap:9px;padding:8px 0 2px}
+.task-card .task-check input{flex:0 0 20px}
+@media(max-width:650px){.task-card{padding:11px}.task-card .task-meter{gap:7px;flex-wrap:wrap}.task-card .task-meter input{flex:1 1 100px;max-width:none}.task-card .task-meter button{padding:8px 11px}}
+
 .notice{background:#302b20;border:1px solid #65502d;padding:10px;border-radius:10px;color:#f4d59c;font-size:12px;margin:10px 0}
 .actions{display:flex;gap:7px;flex-wrap:wrap}
 footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
@@ -76,7 +94,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
 </style>
 </head>
 <body>
-<header><div><h1>Bank<span class="green">Bonus</span></h1><p>Twój osobisty manager promocji · wersja 1.8</p></div><span style="font-size:26px">💰</span></header>
+<header><div><h1>Bank<span class="green">Bonus</span></h1><p>Twój osobisty manager promocji · wersja 1.9</p></div><span style="font-size:26px">💰</span></header>
 
 <nav>
  <button class="active" data-tab="summary" onclick="tab('summary',this)">Podsumowanie</button>
@@ -142,7 +160,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
  <div class="panel"><h2>Historia otrzymanych premii</h2><div id="historyList"></div><hr style="border-color:var(--line)"><div class="row"><strong>Łącznie otrzymano</strong><strong class="green" id="historyTotal">0 zł</strong></div></div>
 </main>
 
-<footer>Bank Bonus 1.8 · Dane są przechowywane lokalnie na tym urządzeniu</footer>
+<footer>Bank Bonus 1.9 · Dane są przechowywane lokalnie na tym urządzeniu</footer>
 
 <script>
 const KEY="bankbonus_v1_1";
@@ -152,6 +170,8 @@ let editingId=null, editorGroups=[], fixedSettings={account:[],card:[]};
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("pl-PL",{style:"currency",currency:"PLN"}).format(Number(n)||0);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const taskText=s=>esc(s).replace(/(\d+(?:[.,]\d+)?\s*(?:zł|PLN|transakcji?|płatności|razy|szt\.?))/gi,'<strong class="task-highlight">$1</strong>');
+const miniProgress=(v,t)=>`<div class="task-progress"><div style="width:${Math.min(100,Math.max(0,(Number(v)||0)/(Number(t)||1)*100))}%"></div></div>`;
 const currentMonth=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`};
 const addMonths=(ym,n)=>{let [y,m]=ym.split("-").map(Number);let d=new Date(y,m-1+n,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`};
 const monthDiff=(a,b)=>{let [ay,am]=a.split("-").map(Number),[by,bm]=b.split("-").map(Number);return (by-ay)*12+bm-am};
@@ -331,7 +351,7 @@ function renderFixed(p,kind,title){
  for(let n=1;n<=p.duration;n++){
   let ym=addMonths(p.startMonth,n-1),future=ym>now,complete=fixedComplete(section,ym);
   out+=`<details class="monthbox ${ym===now?"current-month":future?"future-month":"past-month"}" ${future||complete?"":"open"}><summary class="row"><strong class="${ym===now?"month-focus":""}">${monthName(ym)} ${ym===now?"· AKTUALNY MIESIĄC":""}</strong><strong class="${complete?"month-focus":"muted"}">${complete?"Warunki spełnione":"Warunki w trakcie"}</strong></summary>`;
-  section.tasks.forEach((t,i)=>{let checked=(t.doneMonths||[]).includes(ym),val=Number(t.progressByMonth?.[ym]||0),target=Number(t.target)||1;let control=t.mode==="count"?`<div class="task-meter"><button class="secondary small" ${future||val<=0?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',-1)">−</button><strong>${val}/${target} szt.</strong><button class="small" ${future||val>=target?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',1)">+</button></div>`:t.mode==="amount"?`<div class="task-meter"><strong>${money(val)} / ${money(target)}</strong><input type="number" min="0.01" step="0.01" placeholder="Kwota" ${future?"disabled":""}><button class="small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,1)">Dodaj</button><button class="secondary small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,-1)">Cofnij</button></div>`:`<input type="checkbox" ${checked?"checked":""} ${future?"disabled":""} onchange="markFixed('${p.id}','${kind}',${i},'${ym}',this.checked)">`;out+=`<div class="task task-inline ${checked?"done":""}"><span class="task-name">${esc(t.text)}</span><div class="task-right">${control}</div></div>`});
+  section.tasks.forEach((t,i)=>{let checked=(t.doneMonths||[]).includes(ym),val=Number(t.progressByMonth?.[ym]||0),target=Number(t.target)||1;let control=t.mode==="count"?`<div class="task-meter"><button class="secondary small" ${future||val<=0?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',-1)">−</button><strong>${val}/${target} szt.</strong>${miniProgress(val,target)}<button class="small" ${future||val>=target?"disabled":""} onclick="changeFixedProgress('${p.id}','${kind}',${i},'${ym}',1)">+</button></div>`:t.mode==="amount"?`<div class="task-meter"><strong>${money(val)} / ${money(target)}</strong>${miniProgress(val,target)}<input type="number" min="0.01" step="0.01" placeholder="Kwota" ${future?"disabled":""}><button class="small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,1)">Dodaj</button><button class="secondary small" ${future?"disabled":""} onclick="adjustFixedAmount('${p.id}','${kind}',${i},'${ym}',this,-1)">Cofnij</button></div>`:`<input type="checkbox" ${checked?"checked":""} ${future?"disabled":""} onchange="markFixed('${p.id}','${kind}',${i},'${ym}',this.checked)">`;out+=`<div class="task-card ${checked||(t.mode!=="check"&&val>=target)?"is-done":""}"><span class="task-name">${taskText(t.text)}</span><div class="task-controls">${t.mode==="check"?`<label class="task-check"><input type="checkbox" ${checked?"checked":""} ${future?"disabled":""} onchange="markFixed('${p.id}','${kind}',${i},'${ym}',this.checked)"><span>Oznacz jako wykonane</span></label>`:control}</div></div>`});
   if(future)out+=`<p>Ten miesiąc jeszcze się nie rozpoczął — warunki są zablokowane.</p>`;
   out+=`</details>`;
  }
@@ -341,13 +361,13 @@ function taskControl(p,g,t,ym,locked){
  let disabled=locked?"disabled":"";
  if(t.mode==="count"){
   let val=taskProgress(t,ym),target=Number(t.target)||1;
-  return `<div class="task-meter"><button class="secondary small" ${disabled||val<=0?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',-1)">−</button><strong>${val} / ${target} szt.</strong><button class="small" ${disabled||val>=target?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',1)">+</button></div>`;
+  return `<div class="task-meter"><button class="secondary small" ${disabled||val<=0?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',-1)">−</button><strong>${val} / ${target} szt.</strong>${miniProgress(val,target)}<button class="small" ${disabled||val>=target?"disabled":""} onclick="changeTaskProgress('${p.id}','${g.id}','${t.id}','${ym}',1)">+</button></div>`;
  }
  if(t.mode==="amount"){
   let val=taskProgress(t,ym),target=Number(t.target)||1;
-  return `<div class="task-meter"><span>Suma:</span><strong>${money(val)} / ${money(target)}</strong><input type="number" min="0.01" step="0.01" placeholder="Kwota (zł)" ${disabled} aria-label="Kwota transakcji w zł"><button class="small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,1)">Dodaj</button><button class="secondary small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,-1)">Cofnij</button></div>`;
+  return `<div class="task-meter"><span>Suma:</span><strong>${money(val)} / ${money(target)}</strong>${miniProgress(val,target)}<input type="number" min="0.01" step="0.01" placeholder="Kwota (zł)" ${disabled} aria-label="Kwota transakcji w zł"><button class="small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,1)">Dodaj</button><button class="secondary small" ${disabled} onclick="adjustTaskAmount('${p.id}','${g.id}','${t.id}','${ym}',this,-1)">Cofnij</button></div>`;
  }
- return `<input type="checkbox" ${taskDone(t,ym)?"checked":""} ${disabled} onchange="markTask('${p.id}','${g.id}','${t.id}','${ym}',this.checked)">`;
+ return "";
 }
 function renderMonthProgress(p,now,activeNow,doneTasks,allTasks,pct){
  let status=activeNow?promoMonthRewardStatus(p,now):"Promocja nieaktywna w tym miesiącu";
@@ -372,7 +392,7 @@ function renderPromo(p){
   months.forEach(ym=>{
    let complete=groupComplete(g,ym),due=payoutDue(p,g,ym),paid=groupPaid(g,ym),future=ym>now,past=ym<now;
    out+=`<details class="monthbox ${ym===now?"current-month":future?"future-month":"past-month"}" ${future||(complete&&paid)?"":"open"}><summary class="row wrap"><strong class="${ym===now?"month-focus":""}">${monthName(ym)} ${ym===now?"· AKTUALNY MIESIĄC":""}</strong><strong class="${complete?"month-focus":"muted"}">${complete&&paid?"PREMIA OTRZYMANA":complete?"Warunki spełnione":"Warunki w trakcie"}</strong></summary>`;
-   g.tasks.forEach(t=>{let taskLocked=future||taskLockedAfterPayment(g,t,ym);out+=`<div class="task-wrap"><div class="task task-inline ${taskDone(t,ym)?"done":""}"><span class="task-name">${esc(t.text)}</span><div class="task-right">${taskControl(p,g,t,ym,taskLocked)}</div></div></div>`});
+   g.tasks.forEach(t=>{let taskLocked=future||taskLockedAfterPayment(g,t,ym);out+=`<div class="task-card ${taskDone(t,ym)?"is-done":""}"><span class="task-name">${taskText(t.text)}</span><div class="task-controls">${t.mode==="check"?`<label class="task-check"><input type="checkbox" ${taskDone(t,ym)?"checked":""} ${taskLocked?"disabled":""} onchange="markTask('${p.id}','${g.id}','${t.id}','${ym}',this.checked)"><span>Oznacz jako wykonane</span></label>`:taskControl(p,g,t,ym,taskLocked)}</div></div>`});
    if(!g.tasks.length)out+=`<p>Dodaj warunki do tej listy, aby można było rozliczać premię.</p>`;
    if(future)out+=`<p>Przyszły miesiąc — podgląd warunków, edycja zablokowana do jego rozpoczęcia.</p>`;
    if(due)out+=`<div class="row wrap" style="margin-top:10px"><span class="${paid?"green":"yellow"}">${paid?"Premia potwierdzona jako otrzymana": "Premia do potwierdzenia: "+money(g.amount)}</span>${!paid?`<button class="small" onclick="confirmPayment('${p.id}','${g.id}','${ym}')">Potwierdź wpływ premii</button>`:""}</div>`;
@@ -428,7 +448,7 @@ function deleteHistory(idToDelete){
 }
 function renderHistory(){let total=history.reduce((s,x)=>s+(Number(x.amount)||0),0);$("historyTotal").textContent=money(total);$("historyList").innerHTML=history.length?[...history].reverse().map(x=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><div><strong>${esc(x.bank)}</strong><p>${esc(x.group||x.promo||"Premia")} · okres: ${esc(x.month||"")} · potwierdzono: ${esc(x.date)}</p></div><div class="actions"><strong class="green">+${money(x.amount)}</strong><button class="danger small" onclick="deleteHistory('${x.id}')">Usuń</button></div></div>`).join(""):"<p>Nie potwierdzono jeszcze żadnych wpływów premii.</p>"}
 function save(){localStorage.setItem(KEY,JSON.stringify(promos));localStorage.setItem(KEY+"_history",JSON.stringify(history));render()}
-function backup(){let data=JSON.stringify({promos,history},null,2),url=URL.createObjectURL(new Blob([data],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="BankBonus-1.8-backup.json";a.click();URL.revokeObjectURL(url)}
+function backup(){let data=JSON.stringify({promos,history},null,2),url=URL.createObjectURL(new Blob([data],{type:"application/json"})),a=document.createElement("a");a.href=url;a.download="BankBonus-1.9-backup.json";a.click();URL.revokeObjectURL(url)}
 function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.promos)||!Array.isArray(d.history))throw Error();if(!confirm("Import zastąpi aktualne dane wersji 1.1. Kontynuować?"))return;promos=d.promos;history=d.history;save();alert("Dane zaimportowano.")}catch{alert("Nieprawidłowy plik kopii zapasowej.")}};r.readAsText(f);e.target.value=""}
 resetForm();render();tab("summary",document.querySelector('nav button[data-tab="summary"]'));
 </script>
