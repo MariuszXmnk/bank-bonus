@@ -1,4 +1,4 @@
-const CACHE_NAME = "bank-bonus-pwa-1.7.0";
+const CACHE_NAME = "bank-bonus-pwa-1.8.0";
 const APP_SHELL = [
   "./",
   "./index.html",
